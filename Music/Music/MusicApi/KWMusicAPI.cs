@@ -41,8 +41,8 @@ namespace Music.MusicApi
                     {
                         Dictionary<string, string> header = new Dictionary<string, string>()
                         {
-                            { "Cookie","kw_token=N25WESU3O5"},
-                            { "CSRF","N25WESU3O5"}
+                            { "Cookie",@"Hm_lvt_cdb524f42f0ce19b169a8071123a4797=1708516974; _ga=GA1.2.956491069.1708516974; _gid=GA1.2.1514622552.1708516974; Hm_lpvt_cdb524f42f0ce19b169a8071123a4797=1708519340; _ga_ETPBRPM9ML=GS1.2.1708522026.3.1.1708522054.32.0.0; Hm_Iuvt_cdb524f42f23cer9b268564v7y735ewrq2324=GCfGzki64iSwJpTRcYBtAP84NKHnRyj8"},
+                            { "CSRF","N25WESU3O5"},{ "Secret","6413ede56b4c011dea4cf3e601cae57f6b96b3a376aaa43347cb33f7d4ff0fb404f0a973"}
                         };
                         _httpUtil = new HttpUtil(header);
                     }
@@ -65,7 +65,7 @@ namespace Music.MusicApi
             List<SongSheetInfo> songSheetList = new List<SongSheetInfo>();
             try
             {
-                string getUrl = $"{API_Classify_Playlist_GetRcmPlayList}?pn={start}&rn={size}&order={order}";
+                string getUrl = $"{API_Classify_Playlist_GetRcmPlayList}?pn={start}&rn={size}&order={order}&httpsStatus=1&Reqid=f6c3cc00-d0bc-11ee-9554-6129deedc118";
                 var respondJson = await HttpUtilInstance.Get(getUrl);
                 JArray jArray = JArray.Parse(((JObject)JsonConvert.DeserializeObject(respondJson))["data"]["data"].ToString());
                 for (int i = 0; i < jArray.Count; i++)
@@ -138,7 +138,7 @@ namespace Music.MusicApi
             List<MusicInfo> MusicInfoList = new List<MusicInfo>();
             try
             {
-                string getUrl = $"{API_Playlist_PlayListInfo}?pid={pid}&pn={pn}&rn={rn}";
+                string getUrl = $"{API_Playlist_PlayListInfo}?pid={pid}&pn={pn}&rn={rn}&httpsStatus=1&Reqid=f6c3cc00-d0bc-11ee-9554-6129deedc118";
                 var respondJson = await HttpUtilInstance.Get(getUrl);
 				var jTokenMain = ((JObject)JsonConvert.DeserializeObject(respondJson))["data"];
 				songSheetInfo.Info = jTokenMain["info"].ToString();
@@ -417,12 +417,13 @@ namespace Music.MusicApi
             try
             {
                 //string url = "http://www.kuwo.cn/api/www/search/searchPlayListBykeyWord?pn=1&rn=" + count + "&key=" + searchText;
-                string url = "http://www.kuwo.cn/api/www/search/searchMusicBykeyWord?"+"pn="+pn+"&rn=" + count + "&key=" + searchText + "&reqId=67327430-c3a6-11ec-ab48-713eb75700c1";
+                string url = "https://www.kuwo.cn/search/searchMusicBykeyWord?" + "pn="+pn+"&rn=" + count + "&all=" + searchText + "vipver=1&client=kt&ft=music&cluster=0&strategy=2012&encoding=utf8&rformat=json&mobi=1&issubtitle=1&show_copyright_off=1";
 
                 WebRequest webRequest = WebRequest.Create(url);
                 webRequest.Method = "GET";
-                SetHeaderValue(webRequest.Headers, "csrf", "YHGRC8T7LZR");
+                //SetHeaderValue(webRequest.Headers, "csrf", "YHGRC8T7LZR");
                 SetHeaderValue(webRequest.Headers, "Referer", "http://www.kuwo.cn/");
+                SetHeaderValue(webRequest.Headers, "Secret", "1502f995636f5c65ae57c9f000d9c94e45fabbba5499de574af20fe0ecd60bb805752767");
                 SetHeaderValue(webRequest.Headers, "Cookie", "_ga=GA1.2.281119717.1609679409; Hm_lvt_cdb524f42f0ce19b169a8071123a4797=1614521252,1616906823; Hm_lpvt_cdb524f42f0ce19b169a8071123a4797=1616906823; _gid=GA1.2.1066888924.1616906823; _gat=1; kw_token=YHGRC8T7LZR");
                 webRequest.Credentials = CredentialCache.DefaultCredentials;
                 WebResponse response = webRequest.GetResponse();

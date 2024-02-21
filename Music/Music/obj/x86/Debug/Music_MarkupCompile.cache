@@ -4,7 +4,7 @@
 winexe
 C#
 .cs
-C:\Users\kungeek\Desktop\Music\演示Demo\Music\Music\obj\x86\Debug\
+E:\Demo\演示Demo\Music\Music\obj\x86\Debug\
 Music
 none
 false
@@ -13,7 +13,7 @@ DEBUG;TRACE
 35756117058
 
 108-1277152323
-20-779298827
+201699568488
 App.xaml;MainWindow.xaml;Style\Button.xaml;Style\DataGrid.xaml;Style\Generic.xaml;Style\ListBox.xaml;Style\ScrollViewer.xaml;Style\Slider.xaml;Style\TabControl.xaml;Style\TextBox.xaml;Style\TreeView.xaml;Theme\MusicDesignTheme.xaml;Views\SongWordView.xaml;Views\CurrentPlayListView.xaml;Views\FindMusicView.xaml;Views\FollowView.xaml;Views\LiveBroadcastView.xaml;Views\MusicToolBarUserControl.xaml;Views\LocalDownLoadView.xaml;Views\MyCollectionView.xaml;Views\MyFavoriteMusicView.xaml;Views\MyMusicCloudView.xaml;Views\MyPodcastView.xaml;Views\PlayerView.xaml;Views\PlayListView.xaml;Views\PlayMusicControlView.xaml;Views\PodcastView.xaml;Views\PrivateFMView.xaml;Views\RankingListView.xaml;Views\RecentlyPlayedView.xaml;Views\RecommendView.xaml;Views\SearchResultView.xaml;Views\SettingView.xaml;Views\VideoPlayerView.xaml;Views\VideoView.xaml;
 
 False

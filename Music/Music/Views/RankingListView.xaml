@@ -1,0 +1,698 @@
+﻿<UserControl x:Class="Music.Views.RankingListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converter="clr-namespace:Music.Converters"
+             xmlns:local="clr-namespace:Music.Views"
+             xmlns:assist="clr-namespace:Music.ControlAssist"
+             mc:Ignorable="d" 
+             d:DesignHeight="540" d:DesignWidth="800">
+    <UserControl.Resources>
+
+        <converter:DataGridItemsCountToBoolConverter x:Key="DataGridItemsCountToBoolConverter"/>
+        <converter:DurationToDurationStringConverter x:Key="DurationToDurationStringConverter"/>
+
+        <Style x:Key="DataGridColumnHeaderLeftStyle" TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DataGridColumnHeaderBase}">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        </Style>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="RankingTabItemStyle" TargetType="{x:Type TabItem}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="16,-30,0,0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
+                            <Border x:Name="mainBorder" Padding="0,10,0,10" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" Background="{TemplateBinding Background}" Margin="0">
+                                <DockPanel>
+                                    <Grid Margin="10,0,0,0">
+                                        <Image DockPanel.Dock="Left" Source="https://img2.kuwo.cn/star/albumcover/120/30/97/4276557883.jpg" Width="80" Height="70" Stretch="UniformToFill"/>
+                                        <Border Background="#66000000"/>
+                                    </Grid>
+                                    <StackPanel VerticalAlignment="Center" Margin="10,0,80,0">
+                                        <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabItem}},Path=Header}" Foreground="{DynamicResource MusicDesignLevel1Foreground}" FontSize="12"/>
+                                        <TextBlock Text="今日更新" Foreground="#999999" FontSize="10" Margin="0,5,0,0"/>
+                                    </StackPanel>
+                                </DockPanel>
+                            </Border>
+                            <ContentPresenter x:Name="contentPresenter" TextBlock.Foreground="White" TextBlock.FontSize="16" TextBlock.FontWeight="Bold" ContentSource="Header" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Left"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="mainBorder" Value="{DynamicResource MusicDesignTreeViewItemHoverBackground}"/>
+                                <Setter Property="BorderBrush" TargetName="mainBorder" Value="{DynamicResource MusicDesignTreeViewItemHoverBackground}"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Bottom"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="mainBorder" Value="Pink"/>
+                                <Setter Property="BorderBrush" TargetName="mainBorder" Value="Pink"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Right"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="mainBorder" Value="Pink"/>
+                                <Setter Property="BorderBrush" TargetName="mainBorder" Value="Pink"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Top"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="mainBorder" Value="Pink"/>
+                                <Setter Property="BorderBrush" TargetName="mainBorder" Value="Pink"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Left"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Opacity" TargetName="contentPresenter" Value="0.56"/>
+                                <Setter Property="Background" TargetName="mainBorder" Value="Gray"/>
+                                <Setter Property="BorderBrush" TargetName="mainBorder" Value="Gray"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Bottom"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Opacity" TargetName="contentPresenter" Value="0.56"/>
+                                <Setter Property="Background" TargetName="mainBorder" Value="Gray"/>
+                                <Setter Property="BorderBrush" TargetName="mainBorder" Value="Gray"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Right"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Opacity" TargetName="contentPresenter" Value="0.56"/>
+                                <Setter Property="Background" TargetName="mainBorder" Value="Gray"/>
+                                <Setter Property="BorderBrush" TargetName="mainBorder" Value="Gray"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Top"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Opacity" TargetName="contentPresenter" Value="0.56"/>
+                                <Setter Property="Background" TargetName="mainBorder" Value="Gray"/>
+                                <Setter Property="BorderBrush" TargetName="mainBorder" Value="Gray"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Left"/>
+                                </MultiDataTrigger.Conditions>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Left"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="mainBorder" Value="{DynamicResource MusicDesignTreeViewItemSelectedBackground}"/>
+                                <Setter Property="BorderBrush" TargetName="mainBorder" Value="{DynamicResource MusicDesignTreeViewItemSelectedBackground}"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Bottom"/>
+                                </MultiDataTrigger.Conditions>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Bottom"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Panel.ZIndex" Value="1"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Right"/>
+                                </MultiDataTrigger.Conditions>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Right"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Panel.ZIndex" Value="1"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Top"/>
+                                </MultiDataTrigger.Conditions>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Top"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Panel.ZIndex" Value="1"/>
+                            </MultiDataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <!--Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type local:RankingListView}}}"-->
+    <Grid>
+        <TabControl TabStripPlacement="Left" Style="{StaticResource TabControlStyle}" ItemContainerStyle="{StaticResource RankingTabItemStyle}" SelectedIndex="{Binding RankingSelectedIndex}">
+            <TabItem Header="飙升榜" >
+                <TabControl HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:RankingListView}},Path=ActualHeight}" Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:RankingListView}},Path=ActualWidth}" Style="{StaticResource TabControlStyle}" ItemContainerStyle="{StaticResource TabItemStyle}">
+                    <TabItem Header="歌曲列表"  assist:ElementAssist.Margin="16,7,6,0">
+                        <DataGrid x:Name="songDataGrid" Background="Transparent"
+                              ScrollViewer.VerticalScrollBarVisibility="Disabled" ItemsSource="{Binding BsPlayList}" Style="{StaticResource DataGridStyle}"
+                              BorderThickness="0" Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}},Path=ActualWidth}" 
+                              VerticalScrollBarVisibility="Hidden"
+                              assist:DataGridAssist.CanScroll="False"
+                              SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical"
+                              assist:DataGridAssist.CanClickScroll="{Binding RelativeSource={RelativeSource Mode=Self},Path=Items.Count,Converter={StaticResource DataGridItemsCountToBoolConverter}}"
+                              assist:DataGridAssist.DoubleClickCommand="{Binding DoubleClickCommand}"
+                              MaxHeight="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}},Path=ActualHeight}"
+                              >
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="操作" Width="60" x:Name="cz">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderLeftStyle}">
+                                            <Setter Property="Width" Value="{Binding ElementName=cz,Path=ActualWidth}"/>
+                                            <Setter Property="Margin" Value="14,0,0,0"/>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.CellStyle>
+                                        <Style TargetType="DataGridCell" BasedOn="{StaticResource DataGridCellBase}">
+                                        </Style>
+                                    </DataGridTemplateColumn.CellStyle>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="Transparent">
+                                                <TextBlock Text=""  HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                            </Grid>
+                                            <DataTemplate.Triggers>
+                                                <!--<DataTrigger Binding="{Binding IsPlaying}" Value="true">
+                                                <Setter Property="TextBlock.Foreground" Value="#ec4141"/>
+                                            </DataTrigger>-->
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="标题" MinWidth="300" x:Name="bt">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderLeftStyle}">
+                                            <Setter Property="Width" Value="{Binding ElementName=bt,Path=ActualWidth}"/>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="Transparent">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Songname}"  HorizontalAlignment="Left" VerticalAlignment="Center" MaxWidth="230" TextTrimming="CharacterEllipsis" Margin="0,0,10,0"/>
+                                                    <Border x:Name="mvBorder" Visibility="Collapsed" BorderBrush="{DynamicResource MusicDesignTabItemSelectedMark}" CornerRadius="2" Padding="5,0,5,0" BorderThickness="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                        <Grid>
+                                                            <TextBlock Text="MV" FontSize="10" VerticalAlignment="Center" Margin="0,0,5,0" Foreground="{DynamicResource MusicDesignTabItemSelectedMark}"/>
+                                                            <Button Style="{StaticResource FontButtonStyle}" Content="&#xe87c;" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="6" Background="Transparent" Foreground="{DynamicResource MusicDesignTabItemSelectedMark}" Margin="0,0,-20,0" 
+                                                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:RankingListView}}, Path=DataContext.MvSheetOpenedCommand}" 
+                                                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},Path=SelectedItem}"
+                                                                />
+                                                        </Grid>
+                                                    </Border>
+                                                </StackPanel>
+                                            </Grid>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding IsPlaying}" Value="true">
+                                                    <Setter Property="TextBlock.Foreground" Value="#ec4141"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Hasmv}" Value="true">
+                                                    <Setter Property="Visibility" TargetName="mvBorder" Value="Visible"/>
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="歌手" MinWidth="200"  x:Name="gs">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderLeftStyle}">
+                                            <Setter Property="Width" Value="{Binding ElementName=gs,Path=ActualWidth}"/>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="Transparent">
+                                                <TextBlock Padding="0,0,10,0" Text="{Binding Singer}"  HorizontalAlignment="Left" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                            </Grid>
+                                            <DataTemplate.Triggers>
+                                                <!--<DataTrigger Binding="{Binding IsPlaying}" Value="true">
+                                                <Setter Property="TextBlock.Foreground" Value="#ec4141"/>
+                                            </DataTrigger>-->
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+
+                        </DataGrid>
+                    </TabItem>
+                    <TabItem Header="评论"  assist:ElementAssist.Margin="16,7,6,0">
+
+                    </TabItem>
+                    <TabItem Header="收藏者"  assist:ElementAssist.Margin="16,7,6,0">
+
+                    </TabItem>
+                </TabControl>
+            </TabItem>
+            <TabItem Header="新歌榜" >
+                <TabControl HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:RankingListView}},Path=ActualHeight}" Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:RankingListView}},Path=ActualWidth}" Style="{StaticResource TabControlStyle}" ItemContainerStyle="{StaticResource TabItemStyle}">
+                    <TabItem Header="歌曲列表"  assist:ElementAssist.Margin="16,7,6,0">
+                        <DataGrid x:Name="xgsongDataGrid" Background="Transparent" 
+                              ScrollViewer.VerticalScrollBarVisibility="Disabled" ItemsSource="{Binding XgPlayList}" Style="{StaticResource DataGridStyle}"
+                              BorderThickness="0" Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}},Path=ActualWidth}" 
+                              VerticalScrollBarVisibility="Hidden"
+                              assist:DataGridAssist.CanScroll="False"
+                              SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical"
+                              assist:DataGridAssist.CanClickScroll="{Binding RelativeSource={RelativeSource Mode=Self},Path=Items.Count,Converter={StaticResource DataGridItemsCountToBoolConverter}}"
+                              assist:DataGridAssist.DoubleClickCommand="{Binding DoubleClickCommand}"
+                                  VerticalAlignment="Top"
+                              >
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="操作" Width="60" x:Name="xgcz">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderLeftStyle}">
+                                            <Setter Property="Width" Value="{Binding ElementName=xgcz,Path=ActualWidth}"/>
+                                            <Setter Property="Margin" Value="14,0,0,0"/>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.CellStyle>
+                                        <Style TargetType="DataGridCell" BasedOn="{StaticResource DataGridCellBase}">
+                                        </Style>
+                                    </DataGridTemplateColumn.CellStyle>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="Transparent">
+                                                <TextBlock Text=""  HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                            </Grid>
+                                            <DataTemplate.Triggers>
+                                                <!--<DataTrigger Binding="{Binding IsPlaying}" Value="true">
+                                                <Setter Property="TextBlock.Foreground" Value="#ec4141"/>
+                                            </DataTrigger>-->
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="标题" MinWidth="300" x:Name="xgbt">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderLeftStyle}">
+                                            <Setter Property="Width" Value="{Binding ElementName=xgbt,Path=ActualWidth}"/>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="Transparent">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Songname}"  HorizontalAlignment="Left" VerticalAlignment="Center" MaxWidth="230" TextTrimming="CharacterEllipsis" Margin="0,0,10,0"/>
+                                                    <Border x:Name="mvBorder" Visibility="Collapsed" BorderBrush="{DynamicResource MusicDesignTabItemSelectedMark}" CornerRadius="2" Padding="5,0,5,0" BorderThickness="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                        <Grid>
+                                                            <TextBlock Text="MV" FontSize="10" VerticalAlignment="Center" Margin="0,0,5,0" Foreground="{DynamicResource MusicDesignTabItemSelectedMark}"/>
+                                                            <Button Style="{StaticResource FontButtonStyle}" Content="&#xe87c;" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="6" Background="Transparent" Foreground="{DynamicResource MusicDesignTabItemSelectedMark}" Margin="0,0,-20,0" 
+                                                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:RankingListView}}, Path=DataContext.MvSheetOpenedCommand}" 
+                                                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},Path=SelectedItem}"
+                                                                />
+                                                        </Grid>
+                                                    </Border>
+                                                </StackPanel>
+                                            </Grid>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding IsPlaying}" Value="true">
+                                                    <Setter Property="TextBlock.Foreground" Value="#ec4141"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Hasmv}" Value="true">
+                                                    <Setter Property="Visibility" TargetName="mvBorder" Value="Visible"/>
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="歌手"  MinWidth="200"  x:Name="xggs">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderLeftStyle}">
+                                            <Setter Property="Width" Value="{Binding ElementName=xggs,Path=ActualWidth}"/>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="Transparent">
+                                                <TextBlock Padding="0,0,10,0" Text="{Binding Singer}"  HorizontalAlignment="Left" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                            </Grid>
+                                            <DataTemplate.Triggers>
+                                                <!--<DataTrigger Binding="{Binding IsPlaying}" Value="true">
+                                                <Setter Property="TextBlock.Foreground" Value="#ec4141"/>
+                                            </DataTrigger>-->
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+
+                        </DataGrid>
+                    </TabItem>
+                    <TabItem Header="评论"  assist:ElementAssist.Margin="16,7,6,0">
+
+                    </TabItem>
+                    <TabItem Header="收藏者"  assist:ElementAssist.Margin="16,7,6,0">
+
+                    </TabItem>
+                </TabControl>
+            </TabItem>
+            <TabItem Header="热歌榜" >
+                <TabControl HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:RankingListView}},Path=ActualHeight}" Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:RankingListView}},Path=ActualWidth}" Style="{StaticResource TabControlStyle}" ItemContainerStyle="{StaticResource TabItemStyle}">
+                    <TabItem Header="歌曲列表"  assist:ElementAssist.Margin="16,7,6,0">
+                        <DataGrid x:Name="rgsongDataGrid" Background="Transparent" 
+                              ScrollViewer.VerticalScrollBarVisibility="Disabled" ItemsSource="{Binding RgPlayList}" Style="{StaticResource DataGridStyle}"
+                              BorderThickness="0" Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}},Path=ActualWidth}" 
+                              VerticalScrollBarVisibility="Hidden"
+                              assist:DataGridAssist.CanScroll="False"
+                              SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical"
+                              assist:DataGridAssist.CanClickScroll="{Binding RelativeSource={RelativeSource Mode=Self},Path=Items.Count,Converter={StaticResource DataGridItemsCountToBoolConverter}}"
+                              assist:DataGridAssist.DoubleClickCommand="{Binding DoubleClickCommand}"
+                                  VerticalAlignment="Top"
+                              >
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="操作" Width="60" x:Name="rgcz">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderLeftStyle}">
+                                            <Setter Property="Width" Value="{Binding ElementName=rgcz,Path=ActualWidth}"/>
+                                            <Setter Property="Margin" Value="14,0,0,0"/>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.CellStyle>
+                                        <Style TargetType="DataGridCell" BasedOn="{StaticResource DataGridCellBase}">
+                                        </Style>
+                                    </DataGridTemplateColumn.CellStyle>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="Transparent">
+                                                <TextBlock Text=""  HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                            </Grid>
+                                            <DataTemplate.Triggers>
+                                                <!--<DataTrigger Binding="{Binding IsPlaying}" Value="true">
+                                                <Setter Property="TextBlock.Foreground" Value="#ec4141"/>
+                                            </DataTrigger>-->
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="标题"  MinWidth="300" x:Name="rgbt">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderLeftStyle}">
+                                            <Setter Property="Width" Value="{Binding ElementName=rgbt,Path=ActualWidth}"/>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="Transparent">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Songname}"  HorizontalAlignment="Left" VerticalAlignment="Center" MaxWidth="230" TextTrimming="CharacterEllipsis" Margin="0,0,10,0"/>
+                                                    <Border x:Name="mvBorder" Visibility="Collapsed" BorderBrush="{DynamicResource MusicDesignTabItemSelectedMark}" CornerRadius="2" Padding="5,0,5,0" BorderThickness="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                        <Grid>
+                                                            <TextBlock Text="MV" FontSize="10" VerticalAlignment="Center" Margin="0,0,5,0" Foreground="{DynamicResource MusicDesignTabItemSelectedMark}"/>
+                                                            <Button Style="{StaticResource FontButtonStyle}" Content="&#xe87c;" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="6" Background="Transparent" Foreground="{DynamicResource MusicDesignTabItemSelectedMark}" Margin="0,0,-20,0" 
+                                                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:RankingListView}}, Path=DataContext.MvSheetOpenedCommand}" 
+                                                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},Path=SelectedItem}"
+                                                                />
+                                                        </Grid>
+                                                    </Border>
+                                                </StackPanel>
+                                            </Grid>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding IsPlaying}" Value="true">
+                                                    <Setter Property="TextBlock.Foreground" Value="#ec4141"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Hasmv}" Value="true">
+                                                    <Setter Property="Visibility" TargetName="mvBorder" Value="Visible"/>
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="歌手" MinWidth="200" x:Name="rggs">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderLeftStyle}">
+                                            <Setter Property="Width" Value="{Binding ElementName=rggs,Path=ActualWidth}"/>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="Transparent">
+                                                <TextBlock Padding="0,0,10,0" Text="{Binding Singer}"  HorizontalAlignment="Left" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                            </Grid>
+                                            <DataTemplate.Triggers>
+                                                <!--<DataTrigger Binding="{Binding IsPlaying}" Value="true">
+                                                <Setter Property="TextBlock.Foreground" Value="#ec4141"/>
+                                            </DataTrigger>-->
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+
+                        </DataGrid>
+                    </TabItem>
+                    <TabItem Header="评论"  assist:ElementAssist.Margin="16,7,6,0">
+
+                    </TabItem>
+                    <TabItem Header="收藏者"  assist:ElementAssist.Margin="16,7,6,0">
+
+                    </TabItem>
+                </TabControl>
+            </TabItem>
+            <TabItem Header="抖音歌曲" >
+                <TabControl HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:RankingListView}},Path=ActualHeight}" Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:RankingListView}},Path=ActualWidth}" Style="{StaticResource TabControlStyle}" ItemContainerStyle="{StaticResource TabItemStyle}">
+                    <TabItem Header="歌曲列表"  assist:ElementAssist.Margin="16,7,6,0">
+                        <DataGrid x:Name="dysongDataGrid" Background="Transparent" 
+                              ScrollViewer.VerticalScrollBarVisibility="Disabled" ItemsSource="{Binding DyPlayList}" Style="{StaticResource DataGridStyle}"
+                              BorderThickness="0" Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}},Path=ActualWidth}" 
+                              VerticalScrollBarVisibility="Hidden"
+                              assist:DataGridAssist.CanScroll="False"
+                              SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical"
+                              assist:DataGridAssist.CanClickScroll="{Binding RelativeSource={RelativeSource Mode=Self},Path=Items.Count,Converter={StaticResource DataGridItemsCountToBoolConverter}}"
+                              assist:DataGridAssist.DoubleClickCommand="{Binding DoubleClickCommand}"
+                                  VerticalAlignment="Top"
+                              >
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="操作" Width="60" x:Name="dycz">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderLeftStyle}">
+                                            <Setter Property="Width" Value="{Binding ElementName=dycz,Path=ActualWidth}"/>
+                                            <Setter Property="Margin" Value="14,0,0,0"/>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.CellStyle>
+                                        <Style TargetType="DataGridCell" BasedOn="{StaticResource DataGridCellBase}">
+                                        </Style>
+                                    </DataGridTemplateColumn.CellStyle>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="Transparent">
+                                                <TextBlock Text=""  HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                            </Grid>
+                                            <DataTemplate.Triggers>
+                                                <!--<DataTrigger Binding="{Binding IsPlaying}" Value="true">
+                                                <Setter Property="TextBlock.Foreground" Value="#ec4141"/>
+                                            </DataTrigger>-->
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="标题" MinWidth="300" x:Name="dybt">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderLeftStyle}">
+                                            <Setter Property="Width" Value="{Binding ElementName=dybt,Path=ActualWidth}"/>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="Transparent">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Songname}"  HorizontalAlignment="Left" VerticalAlignment="Center" MaxWidth="230" TextTrimming="CharacterEllipsis" Margin="0,0,10,0"/>
+                                                    <Border x:Name="mvBorder" Visibility="Collapsed" BorderBrush="{DynamicResource MusicDesignTabItemSelectedMark}" CornerRadius="2" Padding="5,0,5,0" BorderThickness="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                        <Grid>
+                                                            <TextBlock Text="MV" FontSize="10" VerticalAlignment="Center" Margin="0,0,5,0" Foreground="{DynamicResource MusicDesignTabItemSelectedMark}"/>
+                                                            <Button Style="{StaticResource FontButtonStyle}" Content="&#xe87c;" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="6" Background="Transparent" Foreground="{DynamicResource MusicDesignTabItemSelectedMark}" Margin="0,0,-20,0" 
+                                                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:RankingListView}}, Path=DataContext.MvSheetOpenedCommand}" 
+                                                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},Path=SelectedItem}"
+                                                                />
+                                                        </Grid>
+                                                    </Border>
+                                                </StackPanel>
+                                            </Grid>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding IsPlaying}" Value="true">
+                                                    <Setter Property="TextBlock.Foreground" Value="#ec4141"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Hasmv}" Value="true">
+                                                    <Setter Property="Visibility" TargetName="mvBorder" Value="Visible"/>
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="歌手" MinWidth="200"  x:Name="dygs">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderLeftStyle}">
+                                            <Setter Property="Width" Value="{Binding ElementName=dygs,Path=ActualWidth}"/>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="Transparent">
+                                                <TextBlock Padding="0,0,10,0" Text="{Binding Singer}"  HorizontalAlignment="Left" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                            </Grid>
+                                            <DataTemplate.Triggers>
+                                                <!--<DataTrigger Binding="{Binding IsPlaying}" Value="true">
+                                                <Setter Property="TextBlock.Foreground" Value="#ec4141"/>
+                                            </DataTrigger>-->
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+
+                        </DataGrid>
+                    </TabItem>
+                    <TabItem Header="评论"  assist:ElementAssist.Margin="16,7,6,0">
+
+                    </TabItem>
+                    <TabItem Header="收藏者"  assist:ElementAssist.Margin="16,7,6,0">
+                    </TabItem>
+                </TabControl>
+            </TabItem>
+            <TabItem Header="万物DJ榜" >
+                <TabControl HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:RankingListView}},Path=ActualHeight}" Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:RankingListView}},Path=ActualWidth}" Style="{StaticResource TabControlStyle}" ItemContainerStyle="{StaticResource TabItemStyle}" assist:ElementAssist.Margin="16,0,6,0">
+                    <TabItem Header="歌曲列表"  assist:ElementAssist.Margin="16,7,6,0">
+                        <DataGrid x:Name="djsongDataGrid" Background="Transparent"
+                              ScrollViewer.VerticalScrollBarVisibility="Disabled" ItemsSource="{Binding DJPlayList}" Style="{StaticResource DataGridStyle}"
+                              BorderThickness="0" Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}},Path=ActualWidth}" 
+                              VerticalScrollBarVisibility="Hidden"
+                              assist:DataGridAssist.CanScroll="False"
+                              SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical"
+                              assist:DataGridAssist.CanClickScroll="{Binding RelativeSource={RelativeSource Mode=Self},Path=Items.Count,Converter={StaticResource DataGridItemsCountToBoolConverter}}"
+                              assist:DataGridAssist.DoubleClickCommand="{Binding DoubleClickCommand}"
+                                  VerticalAlignment="Top"
+                              >
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="操作" Width="60" x:Name="djcz">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderLeftStyle}">
+                                            <Setter Property="Width" Value="{Binding ElementName=djcz,Path=ActualWidth}"/>
+                                            <Setter Property="Margin" Value="14,0,0,0"/>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.CellStyle>
+                                        <Style TargetType="DataGridCell" BasedOn="{StaticResource DataGridCellBase}">
+                                        </Style>
+                                    </DataGridTemplateColumn.CellStyle>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="Transparent">
+                                                <TextBlock Text=""  HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                            </Grid>
+                                            <DataTemplate.Triggers>
+                                                <!--<DataTrigger Binding="{Binding IsPlaying}" Value="true">
+                                                <Setter Property="TextBlock.Foreground" Value="#ec4141"/>
+                                            </DataTrigger>-->
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="标题" MinWidth="300" x:Name="djbt">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderLeftStyle}">
+                                            <Setter Property="Width" Value="{Binding ElementName=djbt,Path=ActualWidth}"/>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="Transparent">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Songname}"  HorizontalAlignment="Left" VerticalAlignment="Center" MaxWidth="230" TextTrimming="CharacterEllipsis" Margin="0,0,10,0"/>
+                                                    <Border x:Name="mvBorder" Visibility="Collapsed" BorderBrush="{DynamicResource MusicDesignTabItemSelectedMark}" CornerRadius="2" Padding="5,0,5,0" BorderThickness="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                        <Grid>
+                                                            <TextBlock Text="MV" FontSize="10" VerticalAlignment="Center" Margin="0,0,5,0" Foreground="{DynamicResource MusicDesignTabItemSelectedMark}"/>
+                                                            <Button Style="{StaticResource FontButtonStyle}" Content="&#xe87c;" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="6" Background="Transparent" Foreground="{DynamicResource MusicDesignTabItemSelectedMark}" Margin="0,0,-20,0" 
+                                                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:RankingListView}}, Path=DataContext.MvSheetOpenedCommand}" 
+                                                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},Path=SelectedItem}"
+                                                                />
+                                                        </Grid>
+                                                    </Border>
+                                                </StackPanel>
+                                            </Grid>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding IsPlaying}" Value="true">
+                                                    <Setter Property="TextBlock.Foreground" Value="#ec4141"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Hasmv}" Value="true">
+                                                    <Setter Property="Visibility" TargetName="mvBorder" Value="Visible"/>
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="歌手" MinWidth="200" x:Name="djgs">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderLeftStyle}">
+                                            <Setter Property="Width" Value="{Binding ElementName=djgs,Path=ActualWidth}"/>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="Transparent">
+                                                <TextBlock Padding="0,0,10,0" Text="{Binding Singer}"  HorizontalAlignment="Left" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                            </Grid>
+                                            <DataTemplate.Triggers>
+                                                <!--<DataTrigger Binding="{Binding IsPlaying}" Value="true">
+                                                <Setter Property="TextBlock.Foreground" Value="#ec4141"/>
+                                            </DataTrigger>-->
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+
+                        </DataGrid>
+                    </TabItem>
+                    <TabItem Header="评论"  assist:ElementAssist.Margin="16,7,6,0">
+
+                    </TabItem>
+                    <TabItem Header="收藏者"  assist:ElementAssist.Margin="16,7,6,0">
+
+                    </TabItem>
+                </TabControl>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

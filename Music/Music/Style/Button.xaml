@@ -1,0 +1,361 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:assist="clr-namespace:Music.ControlAssist"
+                    xmlns:domain="clr-namespace:Music.ViewModels"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style x:Key="FontToggleStyle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Width" Value="16"/>
+        <Setter Property="Height" Value="16"/>
+        <Setter Property="FontFamily" Value="{DynamicResource IconFont}"/>
+        <Setter Property="Foreground" Value="{DynamicResource MusicDesignToolForeground}"/>
+        <Setter Property="assist:BackgroundSwitchElementAssist.MouseHoverBackground" Value="{DynamicResource MusicDesignLevel3Foreground}"/>
+        <Setter Property="assist:BackgroundSwitchElementAssist.MouseDownBackground" Value="{DynamicResource MusicDesignLevel3Foreground}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Grid>
+                        <Border Background="{TemplateBinding Background}" x:Name="border" CornerRadius="{Binding Path=(assist:BorderElementAssist.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}">
+                            <TextBlock x:Name="text" Text="{TemplateBinding Content}" FontSize="{TemplateBinding FontSize}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{TemplateBinding FontFamily}" TextWrapping="Wrap"/>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" TargetName="text" Value="{Binding Path=(assist:BackgroundSwitchElementAssist.MouseHoverBackground), RelativeSource={RelativeSource TemplatedParent}}"></Setter>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="True">
+
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" TargetName="text" Value="#FF999999"></Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Foreground" TargetName="text" Value="{Binding Path=(assist:BackgroundSwitchElementAssist.MouseDownBackground), RelativeSource={RelativeSource TemplatedParent}}"></Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="FontButtonStyle" TargetType="{x:Type Button}">
+        <Style.Setters>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="assist:BackgroundSwitchElementAssist.MouseHoverBackground" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=Foreground}"/>
+            <Setter Property="assist:BackgroundSwitchElementAssist.MouseDownBackground" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=Foreground}"/>
+            <Setter Property="assist:BorderElementAssist.CornerRadius" Value="12"/>
+            <Setter Property="FontFamily" Value="{DynamicResource IconFont}"/>
+            <Setter Property="Foreground" Value="{DynamicResource MusicDesignToolForeground}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid Background="Transparent">
+                            <Border Background="{TemplateBinding Background}" x:Name="border" 
+                                    CornerRadius="{Binding Path=(assist:BorderElementAssist.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}">
+                                <TextBlock x:Name="text" Text="{TemplateBinding Content}" FontSize="{TemplateBinding FontSize}" Foreground="{TemplateBinding Foreground}" 
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{TemplateBinding FontFamily}" TextWrapping="Wrap"/>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" TargetName="text" 
+                                        Value="{Binding Path=(assist:BackgroundSwitchElementAssist.MouseHoverBackground), RelativeSource={RelativeSource TemplatedParent}}"></Setter>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="True">
+                              
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" TargetName="text" Value="0.5"></Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Foreground" TargetName="text" 
+                                        Value="{Binding Path=(assist:BackgroundSwitchElementAssist.MouseDownBackground), RelativeSource={RelativeSource TemplatedParent}}"></Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style x:Key="MaxButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource FontButtonStyle}">
+        <Setter Property="Content" Value="&#xe502;"/>
+        <Setter Property="FontSize" Value="24"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DataContext.ToolBarWindowState,RelativeSource={RelativeSource Mode=Self}}" Value="Maximized">
+                <Setter Property="Content" Value="&#xe50c;"/>
+                <Setter Property="FontSize" Value="22"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="SongSheetButtonStyle" TargetType="{x:Type Button}">
+        <Style.Setters>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,16,16,0"/>
+            <Setter Property="MinHeight" Value="179"/>
+            <Setter Property="Width" Value="179"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <Border CornerRadius="4" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="{Binding Pic}" Stretch="Uniform"/>
+                                </Border.Background>
+                            </Border>
+                            <Border CornerRadius="4">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                        <GradientStop Color="#7F000000" Offset="0.0" />
+                                        <GradientStop Color="#55000000" Offset="0.25" />
+                                        <GradientStop Color="#22000000" Offset="0.5" />
+                                        <GradientStop Color="#22000000" Offset="0.75" />
+                                        <GradientStop Color="#55000000" Offset="9.0" />
+                                        <GradientStop Color="#7F000000" Offset="1.0" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <Border x:Name="playMark" Visibility="Collapsed" Opacity="0" Background="White" Width="36" Height="36" CornerRadius="18" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,6,6">
+                                <TextBlock FontFamily="{DynamicResource IconFont}" Text="&#xe87c;" Foreground="#ec4141" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3,0,0,0"/>
+                            </Border>
+                            <StackPanel Orientation="Horizontal"  HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,6,6,0">
+                                <Path Data="M0,0 L7,5 L0,10 0,0z" Stroke="White" Margin="0,2,3,0"/>
+                                <TextBlock Text="{Binding Listen}" FontSize="12"/>
+                            </StackPanel>
+                            <TextBlock FontFamily="{DynamicResource IconFont}" Text="&#xe603;" FontSize="11" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="6,0,0,8"/>
+                            <TextBlock Text="{Binding Uname}" FontSize="12" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20,0,0,6"  TextTrimming="CharacterEllipsis"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard >
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames  Storyboard.TargetName="playMark" Storyboard.TargetProperty="Visibility">
+                                                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Visible}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" Storyboard.TargetName="playMark" To="1" Duration="0:0:0.5"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard >
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames  Storyboard.TargetName="playMark" Storyboard.TargetProperty="Visibility">
+                                                <DiscreteObjectKeyFrame KeyTime="0:0:0.5" Value="{x:Static Visibility.Collapsed}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" Storyboard.TargetName="playMark" To="0" Duration="0:0:0.5"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style x:Key="SongSheetTitleButtonStyle" TargetType="{x:Type Button}">
+        <Style.Setters>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,10,6,0"/>
+            <Setter Property="Width" Value="179"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <Border Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+                                <ContentPresenter Content="{TemplateBinding Content}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}"/>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style x:Key="PlayModeButtonStyle" TargetType="{x:Type Button}">
+        <Style.Setters>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
+            <Setter Property="Width" Value="36"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontFamily" Value="{DynamicResource IconFont}"/>
+            <Setter Property="Foreground" Value="#313131"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <Border Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+                                <TextBlock x:Name="text" Text="&#xe66d;" FontSize="{TemplateBinding FontSize}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{TemplateBinding FontFamily}" TextWrapping="Wrap"/>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <DataTrigger Binding="{Binding Mode}" Value="0">
+                                <Setter Property="Text" TargetName="text" Value="&#xe66d;"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Mode}" Value="1">
+                                <Setter Property="Text" TargetName="text" Value="&#xe61d;"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Mode}" Value="2">
+                                <Setter Property="Text" TargetName="text" Value="&#xe6b3;"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Mode}" Value="3">
+                                <Setter Property="Text" TargetName="text" Value="&#xe6a0;"/>
+                            </DataTrigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" TargetName="text" Value="{Binding Path=(assist:BackgroundSwitchElementAssist.MouseHoverBackground), RelativeSource={RelativeSource TemplatedParent}}"></Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style x:Key="PlayStateButtonStyle" TargetType="{x:Type Button}">
+        <Style.Setters>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
+            <Setter Property="Width" Value="36"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontFamily" Value="{DynamicResource IconFont}"/>
+            <Setter Property="Foreground" Value="#313131"/>
+            <Setter Property="Background" Value="{DynamicResource MusicDesignButtonPlayBackground}"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="5,0,0,0"/>
+            <Setter Property="assist:BorderElementAssist.CornerRadius" Value="18"/>
+            <Setter Property="assist:BackgroundSwitchElementAssist.MouseHoverBackground" Value="#e5e5e5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="{Binding Path=(assist:BorderElementAssist.CornerRadius),RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                                <TextBlock x:Name="text" Text="&#xe87c;" FontSize="{TemplateBinding FontSize}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{TemplateBinding FontFamily}" TextWrapping="Wrap" Margin="{TemplateBinding Padding}"/>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" TargetName="border" Value="{Binding Path=(assist:BackgroundSwitchElementAssist.MouseHoverBackground), RelativeSource={RelativeSource TemplatedParent}}"/>
+                            </Trigger>
+                            <DataTrigger Binding="{Binding Path=State, Source={x:Static domain:PlayMusicControlViewModel.CurrentMusic}}" Value="0">
+                                <Setter Property="Text" TargetName="text" Value="&#xe60b;"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="FontSize" Value="15"/>
+                                <Setter Property="Margin" TargetName="text" Value="0"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Path=State, Source={x:Static domain:PlayMusicControlViewModel.CurrentMusic}}" Value="1">
+                                <Setter Property="Text" TargetName="text" Value="&#xe87c;"/>
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style x:Key="MvPlayStateButtonStyle" TargetType="{x:Type Button}">
+        <Style.Setters>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
+            <Setter Property="Padding" Value="0,0,0,0"/>
+            <Setter Property="Width" Value="36"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="White"/>
+            <Setter Property="FontFamily" Value="{DynamicResource IconFont}"/>
+            <Setter Property="Foreground" Value="#313131"/>
+            <Setter Property="Background" Value="{DynamicResource MusicDesignButtonPlayBackground}"/>
+            <Setter Property="FontSize" Value="8"/>
+            <Setter Property="assist:BorderElementAssist.CornerRadius" Value="12"/>
+            <Setter Property="assist:BackgroundSwitchElementAssist.MouseHoverBackground" Value="#FF999999"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="{Binding Path=(assist:BorderElementAssist.CornerRadius),RelativeSource={RelativeSource Mode=TemplatedParent}}" SnapsToDevicePixels="True">
+                                <Path x:Name="innerPath" Stroke="#FF666666" Stretch="Uniform" Data="M150.1184 150.1184C250.2656 50.0736 370.8928 0 512 0c141.1072 0 261.7344 50.0736 361.8816 150.1184C973.9264 250.2656 1024 370.8928 1024 512c0 141.1072-50.0736 261.7344-150.1184 361.8816C773.7344 973.9264 653.1072 1024 512 1024c-141.1072 0-261.7344-50.0736-361.8816-150.1184C50.0736 773.7344 0 653.1072 0 512 0 370.8928 50.0736 250.2656 150.1184 150.1184zM512 41.8816c-85.2992 0-164.1472 20.8896-236.3392 62.7712C203.4688 146.432 146.432 203.4688 104.6528 275.6608 62.7712 347.8528 41.8816 426.7008 41.8816 512c0 129.6384 45.9776 240.4352 137.8304 332.288C271.5648 936.2432 382.3616 982.1184 512 982.1184s240.4352-45.9776 332.288-137.8304C936.2432 752.4352 982.1184 641.6384 982.1184 512c0-129.6384-45.9776-240.4352-137.8304-332.288S641.6384 41.8816 512 41.8816z"/>
+                            </Border>
+                            <TextBlock x:Name="text" Text="&#xe87c;" FontSize="{TemplateBinding FontSize}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{TemplateBinding FontFamily}" TextWrapping="Wrap" Margin="{TemplateBinding Padding}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Stroke" TargetName="innerPath" Value="{Binding Path=(assist:BackgroundSwitchElementAssist.MouseHoverBackground), RelativeSource={RelativeSource TemplatedParent}}"/>
+                            </Trigger>
+                            <DataTrigger Binding="{Binding Path=State}" Value="0">
+                                <Setter Property="Text" TargetName="text" Value="&#xe60b;"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="FontSize" Value="10"/>
+                                <Setter Property="Margin" TargetName="text" Value="0"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Path=State}" Value="1">
+                                <Setter Property="Text" TargetName="text" Value="&#xe87c;"/>
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style x:Key="TitleButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Width" Value="80"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="FontFamily" Value="{DynamicResource IconFont}"/>
+        <Setter Property="Foreground" Value="{DynamicResource MusicDesignLevel2Foreground}"/>
+        <Setter Property="assist:BackgroundSwitchElementAssist.MouseHoverBackground" Value="{DynamicResource MusicDesignLevel3Foreground}"/>
+        <Setter Property="assist:BackgroundSwitchElementAssist.MouseDownBackground" Value="{DynamicResource MusicDesignLevel3Foreground}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <ContentControl TextBlock.FontSize="20" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" Content="{TemplateBinding Content}"/>
+                        <Border Grid.Column="1" Background="{TemplateBinding Background}" x:Name="border" CornerRadius="{Binding Path=(assist:BorderElementAssist.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}">
+                            <TextBlock x:Name="text" Margin="{Binding Path=(assist:TextBlockElementAssist.Margin) , RelativeSource={RelativeSource TemplatedParent}}" Text="{Binding Path=(assist:TextBlockElementAssist.ExText) , RelativeSource={RelativeSource TemplatedParent}}" FontSize="{TemplateBinding FontSize}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{TemplateBinding FontFamily}" TextWrapping="Wrap"/>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" TargetName="text" Value="{Binding Path=(assist:BackgroundSwitchElementAssist.MouseHoverBackground), RelativeSource={RelativeSource TemplatedParent}}"></Setter>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="True">
+
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" TargetName="text" Value="#FF999999"></Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Foreground" TargetName="text" Value="{Binding Path=(assist:BackgroundSwitchElementAssist.MouseDownBackground), RelativeSource={RelativeSource TemplatedParent}}"></Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
+    

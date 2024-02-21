@@ -1,0 +1,196 @@
+﻿<Window x:Class="Music.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Music"
+        xmlns:domain="clr-namespace:Music.ViewModels"
+        xmlns:assist="clr-namespace:Music.ControlAssist"
+        xmlns:control="clr-namespace:Music.Controls"
+        xmlns:view="clr-namespace:Music.Views"
+        xmlns:manager ="clr-namespace:Music.Infrastructure.Manager"
+        xmlns:converter="clr-namespace:Music.Converters"
+        mc:Ignorable="d"
+        Title="Music" Height="732" Width="1086" WindowStyle="None" ResizeMode="CanMinimize" Background="Transparent" MouseLeftButtonDown="Window_MouseLeftButtonDown" 
+        WindowStartupLocation="CenterScreen"
+       
+        assist:WindowAssist.WindowResult="{Binding ToolBarViewModel.IsClosed}"
+        WindowState="{Binding ToolBarViewModel.ToolBarWindowState}" AllowsTransparency="True"
+        >
+    <Window.Resources>
+        <converter:BoolToColorConverter x:Key="BoolToVisibility"/>
+            
+    </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Gesture="Enter" Command="{Binding ToolBarViewModel.SearchCommand}" CommandParameter="{Binding ToolBarViewModel.SearchText}"/>
+    </Window.InputBindings>
+    <Window.CommandBindings>
+
+    </Window.CommandBindings>
+    <!--<WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="-1" />
+    </WindowChrome.WindowChrome>-->
+    <Grid Background="Transparent">
+        <Border x:Name="shadowBorder" Margin="{Binding ToolBarViewModel.WindowMargin}" Background="White">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="32" Direction="0" ShadowDepth="0" Color="Black" Opacity="0.2"/>
+            </Border.Effect>
+        </Border>
+        <Border x:Name="mainBorder" Margin="{Binding ToolBarViewModel.WindowMargin}" Focusable="True">
+            <Border.Background>
+                <ImageBrush ImageSource="http://img1.kuwo.cn/star/userpl2015/55/33/1645781077761_421490355_500.jpg" Stretch="UniformToFill" Opacity="0"/>
+            </Border.Background>
+            <DockPanel LastChildFill="True" Background="{DynamicResource MusicDesignSecondBody}">
+                <Border x:Name="BarBlank" DockPanel.Dock="Top" Height="60" Background="{DynamicResource MusicDesignBackground}" MouseLeftButtonDown="BarBlank_MouseLeftButtonDown">
+                    <view:MusicToolBarUserControl DataContext="{Binding ToolBarViewModel}"/>
+                </Border>
+                <Grid  DockPanel.Dock="Top"  >
+                    <DockPanel LastChildFill="True">
+                        <Grid DockPanel.Dock="Bottom" Height="71" >
+                            <view:PlayerView/>
+                            <Border SnapsToDevicePixels="True" BorderThickness="0,0.8,0,0" BorderBrush="{DynamicResource MusicDesignMainBorderBrush}" Background="{DynamicResource MusicDesignBody}">
+                                <view:PlayMusicControlView/>
+                            </Border>
+                        </Grid>
+                      
+                        <Border DockPanel.Dock="Top">
+                            <DockPanel>
+                                <Border DockPanel.Dock="Left" Width="200" SnapsToDevicePixels="True" BorderThickness="0,0,0.8,0" BorderBrush="{DynamicResource MusicDesignMainBorderBrush}">
+                                    <TreeView Name="tree" Width="200" Foreground="White" Margin="0,0,0,0" Background="{DynamicResource MusicDesignSecondBody}"
+                        ItemsSource="{Binding MenuItems}" BorderThickness="0"
+                         ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto" Style="{StaticResource TreeViewStyle}" ItemContainerStyle="{StaticResource TreeViewItemStyle}"
+                                          assist:TreeViewAssist.SelectedItemChangedCommand="{Binding MenuSelectedItemChangedCommand}"
+                                          assist:TreeViewAssist.SelectedTreeViewItem="{Binding Path=SelectedItem,Source={x:Static domain:MainWindowViewModel.MainContent},Mode=TwoWay}"
+                        >
+                                        <TreeView.ItemTemplate>
+                                            <HierarchicalDataTemplate
+                                DataType="{x:Type domain:MenuItemDetail}"
+                                ItemsSource="{Binding Childrens}">
+                                                <Border Height="36" MaxWidth="150">
+                                                    <TextBlock VerticalAlignment="Center"
+                                    Text="{Binding MenuItemName}"
+                                    Margin="3,2" Padding="10,0,0,0" TextTrimming="CharacterEllipsis"/>
+                                                </Border>
+                                            </HierarchicalDataTemplate>
+
+                                        </TreeView.ItemTemplate>
+                                    </TreeView>
+                                </Border>
+                                <Border DockPanel.Dock="Left">
+                                    <Grid>
+                                        <ContentControl Content="{Binding Path=SelectedItem,Source={x:Static domain:MainWindowViewModel.MainContent}}"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                                        <view:CurrentPlayListView x:Name="cpl" Background="Transparent" HorizontalAlignment="Right" Opacity="0" Width="424" Visibility="{Binding Path=CurrentPlayListVisibility, Source={x:Static domain:MainWindowViewModel.MainContent}}">
+                                            <view:CurrentPlayListView.Style>
+                                                <Style TargetType="{x:Type view:CurrentPlayListView}">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="Visibility" Value="Visible">
+                                                            <Trigger.EnterActions>
+                                                                <BeginStoryboard >
+                                                                    <BeginStoryboard.Storyboard>
+                                                                        <Storyboard >
+                                                                            <!--<DoubleAnimation Storyboard.TargetProperty="Width" To="424" Duration="0:0:0.1"/>-->
+                                                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.1"/>
+                                                                        </Storyboard>
+                                                                    </BeginStoryboard.Storyboard>
+                                                                </BeginStoryboard>
+                                                            </Trigger.EnterActions>
+                                                            <Trigger.ExitActions>
+                                                                <BeginStoryboard >
+                                                                    <BeginStoryboard.Storyboard>
+                                                                        <Storyboard >
+                                                                            <!--<DoubleAnimation Storyboard.TargetProperty="Width" To="0" Duration="0:0:1"/>-->
+                                                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:1"/>
+                                                                        </Storyboard>
+                                                                    </BeginStoryboard.Storyboard>
+                                                                </BeginStoryboard>
+                                                            </Trigger.ExitActions>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </view:CurrentPlayListView.Style>
+                                        </view:CurrentPlayListView>
+                                        <Border Background="Transparent" Visibility="{Binding Path=LoadingVisibility, Source={x:Static domain:MainWindowViewModel.MainContent}}">
+                                            <Grid>
+                                                <Viewbox Stretch="Uniform"  Width="50" Height="50" HorizontalAlignment="Center">
+                                                    <Grid x:Name="loadingGridRed"  Width="100" Height="100" RenderTransformOrigin="0.5,0.5">
+                                                        <Grid.RenderTransform>
+                                                            <TransformGroup>
+                                                                <RotateTransform Angle="0"/>
+                                                                <TranslateTransform/>
+                                                            </TransformGroup>
+                                                        </Grid.RenderTransform>
+                                                        <Canvas Width="50" Height="100" HorizontalAlignment="Left" ClipToBounds="True">
+                                                            <Border Canvas.Top="0" Canvas.Left="0" Width="100" Height="100" BorderThickness="10" CornerRadius="50" 
+                                                                    BorderBrush="{DynamicResource MusicDesignTabItemSelectedMark}">
+                                                            </Border>
+                                                        </Canvas>
+                                                        <Canvas Width="50" Height="100" HorizontalAlignment="Right" ClipToBounds="True">
+                                                            <Border Canvas.Top="0" Canvas.Left="-50" Width="100" Height="100" BorderThickness="10" CornerRadius="50" 
+                                                                    RenderTransformOrigin="0.5,0.5" BorderBrush="{DynamicResource MusicDesignMainLinearGradientBrush}">
+                                                            </Border>
+                                                        </Canvas>
+                                                        <!--<Canvas  Width="100" Height="10" VerticalAlignment="Bottom" HorizontalAlignment="Center" ClipToBounds="True">
+                                <Border BorderBrush="#FFF15151" Canvas.Bottom="0" Canvas.Left="0" Width="100" Height="100" BorderThickness="10" CornerRadius="50" >
+
+                                </Border>  
+                            </Canvas>-->
+                                                        <Border Height="10" Width="10" CornerRadius="5" Background="{DynamicResource MusicDesignTabItemSelectedMark}" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                                                        <Grid.Triggers>
+                                                            <EventTrigger RoutedEvent="Loaded">
+                                                                <BeginStoryboard>
+                                                                    <Storyboard RepeatBehavior="Forever" Storyboard.TargetName="loadingGridRed">
+                                                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(RotateTransform.Angle)" To="360" BeginTime="0:0:0" Duration="0:0:1">
+                                                                            <!--<DoubleAnimation.EasingFunction>
+                                                <PowerEase EasingMode="EaseInOut"/>
+                                            </DoubleAnimation.EasingFunction>-->
+                                                                        </DoubleAnimation>
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </EventTrigger>
+                                                        </Grid.Triggers>
+                                                    </Grid>
+                                                    </Viewbox>
+                                                    <TextBlock Text="加载中......" Visibility="Collapsed" Margin="0,80,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Foreground="{DynamicResource MusicDesignTabItemSelectedMark}" FontSize="14"/>
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                            </DockPanel>
+                        </Border>
+                    </DockPanel>
+                    <Border Visibility="Visible">
+                        <view:VideoPlayerView Background="{DynamicResource MusicDesignBody}" DataContext="{Binding Path=CurrentVideoPlayerViewModel, Source={x:Static domain:MainWindowViewModel.MainContent}}" Visibility="{Binding Path=MvViewVisibility, Source={x:Static domain:MainWindowViewModel.MainContent}}"/>
+                    </Border>
+                        
+                </Grid>
+            </DockPanel>
+            <!--<Grid>
+                <Border Visibility="Collapsed">
+                    <Border.Background>
+                        <ImageBrush ImageSource="http://img1.kuwo.cn/star/userpl2015/55/33/1645781077761_421490355_500.jpg" Stretch="UniformToFill" Opacity="0.5"/>
+                    </Border.Background>
+                </Border>
+                <Button x:Name="play" Content="play" Width="100" Height="30" Click="play_Click" Visibility="Collapsed"/>
+                <Button x:Name="Mvplay" Content="play" Width="100" Height="30" Click="Mvplay_Click"/>
+                <MediaElement x:Name="McMediaElement" LoadedBehavior="Manual"/>
+                <MediaElement x:Name="McMvMediaElement" LoadedBehavior="Manual"/>
+                <Grid Name="GridVolume" Width="283" Background="White" Height="65" Grid.Column="2" HorizontalAlignment="Right"
+                      VerticalAlignment="Bottom" Margin="10,0" MouseLeave="GridVolume_MouseLeave" Visibility="Visible">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Image Name="ImgVolume" 
+                                Margin="10,2,10,2" Width="20" Height="20"/>
+                        <Slider Name="sliderVolume"
+                                Width="230" Maximum="100"  Minimum="0" Value="80"
+                                VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Polyline Stroke="Black" StrokeThickness="1"
+                              StrokeLineJoin="Round"  Points="280,0 280,45 175,45 165,55 155,45 0,45 0,0 280,0"
+                              HorizontalAlignment="Center" VerticalAlignment="Bottom">
+
+                    </Polyline>
+                </Grid>
+            </Grid>-->
+        </Border>
+    </Grid>
+</Window>

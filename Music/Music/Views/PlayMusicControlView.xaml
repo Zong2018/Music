@@ -1,0 +1,102 @@
+﻿<UserControl x:Class="Music.Views.PlayMusicControlView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Music.Views"
+             xmlns:control="clr-namespace:Music.Controls"
+             xmlns:domain="clr-namespace:Music.ViewModels"  
+             xmlns:assist="clr-namespace:Music.ControlAssist"     
+             xmlns:converter="clr-namespace:Music.Converters"
+             xmlns:manager="clr-namespace:Music.Infrastructure.Manager"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" 
+             d:DesignHeight="71" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converter:BoolToVisibility x:Key="BoolToVisibility"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="28"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="420"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel  Grid.Row="0" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,6,0,0">
+            <Button Style="{StaticResource PlayModeButtonStyle}" Width="36" Height="36" Margin="0,0,10,0" Command="{Binding PlayModeCommand}" assist:BackgroundSwitchElementAssist.MouseHoverBackground="Red"  Foreground="{DynamicResource MusicDesignLevel1Foreground}" >
+            </Button>
+            <Button Style="{StaticResource FontButtonStyle}" Width="36" Height="36" Margin="0,0,10,0" Content="&#xe63c;" FontSize="20" Foreground="{DynamicResource MusicDesignLevel1Foreground}" Background="Transparent" Command="{Binding Path=PreCommand, Source={x:Static domain:PlayMusicControlViewModel.CurrentMusic}}" assist:BackgroundSwitchElementAssist.MouseHoverBackground="Red"/>
+            <Button Style="{StaticResource PlayStateButtonStyle}" Width="36" Height="36" Margin="0,0,10,0" Content="&#xe60b;" FontSize="16" Foreground="{DynamicResource MusicDesignLevel1Foreground}" Command="{Binding Path=PlayCommand, Source={x:Static domain:PlayMusicControlViewModel.CurrentMusic}}" assist:BackgroundSwitchElementAssist.MouseHoverBackground="{DynamicResource MusicDesignButtonPlayHoverBackground}"/>
+            <Button Style="{StaticResource FontButtonStyle}" Width="36" Height="36" Margin="0,0,10,0"  Content="&#xe63e;" FontSize="20" Foreground="{DynamicResource MusicDesignLevel1Foreground}" Background="Transparent" Command="{Binding Path=NextCommand, Source={x:Static domain:PlayMusicControlViewModel.CurrentMusic}}" assist:BackgroundSwitchElementAssist.MouseHoverBackground="Red"/>
+            <Button Style="{StaticResource FontButtonStyle}" Width="36" Height="36" Margin="0,0,10,0" Content="词" Foreground="{DynamicResource MusicDesignLevel1Foreground}" assist:BackgroundSwitchElementAssist.MouseHoverBackground="Red" Background="Transparent" Command="{Binding SongWordCommand}"/>
+        </StackPanel>
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="350"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="{Binding Path=CurrentPositionString, Source={x:Static domain:PlayMusicControlViewModel.CurrentMusic}}" Foreground="#FF999999" HorizontalAlignment="Right"  VerticalAlignment="Bottom" Margin="0,0,4,10"/>
+            <Grid Grid.Column="1">
+                <Slider Visibility="Visible" Grid.Column="1" LargeChange="0"  SmallChange="1" Maximum="{Binding Path=TotalSecond, Source={x:Static domain:PlayMusicControlViewModel.CurrentMusic}}" Value="{Binding Path=BufferingProgress, Source={x:Static domain:PlayMusicControlViewModel.CurrentMusic}}"
+                    VerticalAlignment="Bottom" Margin="0,0,0,13"
+                    Style="{StaticResource MediaBufferingProgressSlider}"
+                    />
+                <Slider Visibility="Visible" Grid.Column="1" LargeChange="0"  SmallChange="1" Maximum="{Binding Path=TotalSecond, Source={x:Static domain:PlayMusicControlViewModel.CurrentMusic}}" Value="{Binding Path=CurrentPosition, Source={x:Static domain:PlayMusicControlViewModel.CurrentMusic}}"
+                    VerticalAlignment="Bottom" Margin="0,0,0,10"
+                    Style="{StaticResource MediaProgressSlider}"
+                    />
+            </Grid>
+         
+            <TextBlock Grid.Column="2" Text="{Binding Path=Duration, Source={x:Static domain:PlayMusicControlViewModel.CurrentMusic}}" Foreground="#FF999999" HorizontalAlignment="Left"  VerticalAlignment="Bottom" Margin="4,0,0,10"/>
+        </Grid>
+        <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
+            <control:DropDownControl Placement="Top"
+                                  HorizontalOffset="0"
+                                  VerticalOffset="10">
+                <control:DropDownControl.Content>
+                    <Button Content="音量" Style="{StaticResource FontButtonStyle}" Background="Transparent" Foreground="{DynamicResource MusicDesignLevel2Foreground}"/>
+                </control:DropDownControl.Content>
+                <control:DropDownControl.Child>
+                    <Grid Background="Transparent">
+                        <Border Background="{DynamicResource MusicDesignSecondBody}" Width="30" Padding="0,5,0,5" CornerRadius="4" Margin="2" BorderThickness="1" BorderBrush="{DynamicResource MusicDesignMainBorderBrush}">
+                            <Slider Visibility="Visible" Grid.Column="1" LargeChange="0"  SmallChange="0.01" Maximum="1" Value="{Binding Path=Volume, Source={x:Static manager:MediaManager.MediaPlayer}}"
+                    VerticalAlignment="Bottom" Margin="0,0,0,0" Orientation="Vertical" Height="100" HorizontalAlignment="Center"
+                    Style="{StaticResource MediaProgressSlider}"
+                    />
+                        </Border>
+                    </Grid>
+                </control:DropDownControl.Child>
+            </control:DropDownControl>
+            <ToggleButton Style="{StaticResource FontToggleStyle}" HorizontalAlignment="Right" Margin="0,0,16,0" Width="36" Height="36" Content="&#xea84;" FontSize="16" Background="Transparent" Foreground="{DynamicResource MusicDesignLevel2Foreground}"  IsChecked="{Binding Path=CurrentPlayListVisibility, Source={x:Static domain:MainWindowViewModel.MainContent},Converter={StaticResource BoolToVisibility}}" Command="{Binding ViewShowCommand}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="0" Grid.RowSpan="2" Orientation="Horizontal">
+            <Grid>
+                <Border Width="46" Height="46" CornerRadius="4" Margin="12" BorderThickness="0" Background="Gray" Opacity="0.3">
+                    <TextBlock Text="" Foreground="{DynamicResource MusicDesignLevel1Foreground}" FontSize="10" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Border>
+                <Border Width="46" Height="46" CornerRadius="4" Margin="12" BorderThickness="0">
+                    <Border.Background>
+                        <ImageBrush ImageSource="{Binding Path=CurrentMusic.Pturl, Source={x:Static domain:PlayMusicControlViewModel.CurrentMusic}}" Stretch="Uniform"/>
+                    </Border.Background>
+                </Border>
+                <Button Style="{StaticResource FontButtonStyle}" Background="Transparent" Command="{Binding SongWordCommand}"/>
+            </Grid>
+            <StackPanel Margin="0,16,0,0" >
+                <Grid>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Path=CurrentMusic.Songname, Source={x:Static domain:PlayMusicControlViewModel.CurrentMusic}}" MaxWidth="200"  TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"  Foreground="{DynamicResource MusicDesignLevel2Foreground}" FontSize="14"/>
+                            <ToggleButton  Style="{StaticResource FontToggleStyle}" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,-2,0,0" Content="&#xe648;" FontSize="16" Background="Transparent" Foreground="{DynamicResource MusicDesignLevel2Foreground}"/>
+                        </StackPanel>
+                        <TextBlock Text="{Binding Path=CurrentMusic.Singer, Source={x:Static domain:PlayMusicControlViewModel.CurrentMusic}}" Margin="0,0,0,0"  MaxWidth="200" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource MusicDesignLevel2Foreground}" FontSize="14" HorizontalAlignment="Left"/>
+                    </StackPanel>
+                    <Button Style="{StaticResource FontButtonStyle}" Background="Transparent" Command="{Binding SongWordCommand}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,25,0"/>
+                </Grid>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

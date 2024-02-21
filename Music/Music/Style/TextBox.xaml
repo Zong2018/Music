@@ -1,0 +1,165 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:assist="clr-namespace:Music.ControlAssist"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--{StaticResource FtspGlobalFontMainColor}-->
+    <Style x:Key="WateMarkStyle" TargetType="TextBlock">
+        <!--<Setter Property="FontFamily" Value="Microsoft YaHei"/>
+        <Setter Property="FontSize" Value="14"/>-->
+        <Setter Property="Foreground" Value="{Binding Path= (assist:TextBlockElementAssist.Foreground),RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="{Binding Path= (assist:TextBlockElementAssist.Margin),RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+    </Style>
+
+    <SolidColorBrush x:Key="TextBox.Static.Border" Color="#FFABAdB3"/>
+    <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA"/>
+    <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF3399FF"/>
+    <Style x:Key="TextBoxBaseStyle" TargetType="{x:Type TextBox}">
+        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}"/>
+        <Setter Property="Foreground" Value="#FF666666"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="AllowDrop" Value="true"/>
+        <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+        <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+        <Setter Property="FontFamily" Value="Microsoft YaHei"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="assist:BorderElementAssist.CornerRadius" Value="4"/>
+        <Setter Property="assist:TextBlockElementAssist.Foreground" Value="#66FFFFFF"/>
+        <Setter Property="assist:TextBlockElementAssist.Margin" Value="12,0,0,0"/>
+        <Setter Property="assist:BackgroundSwitchElementAssist.MouseHoverBackground" Value="{StaticResource TextBox.MouseOver.Border}"/>
+        <Setter Property="assist:BackgroundSwitchElementAssist.MouseDownBackground" Value="{StaticResource TextBox.Focus.Border}"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBox}">
+                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True" CornerRadius="{Binding Path=(assist:BorderElementAssist.CornerRadius), RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                        <Grid>
+                            <ScrollViewer  x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                            <TextBlock x:Name="tipTextBlock"
+                                       Foreground="{Binding Path=(assist:TextBlockElementAssist.Foreground), RelativeSource={RelativeSource Mode=TemplatedParent}}" 
+                                       Margin="{Binding Path= (assist:TextBlockElementAssist.Margin),RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                       Text="{Binding Path=(assist:TextBlockElementAssist.ExText), RelativeSource={RelativeSource Mode=TemplatedParent}}" Visibility="Collapsed" VerticalAlignment="Center" FontFamily="{TemplateBinding FontFamily}" FontSize="{TemplateBinding FontSize}" 
+                                       Style="{StaticResource WateMarkStyle}"/>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{Binding Path=(assist:BackgroundSwitchElementAssist.MouseHoverBackground),RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="true">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{Binding Path=(assist:BackgroundSwitchElementAssist.MouseDownBackground),RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                        </Trigger>
+                        <Trigger Property="IsFocused" Value="false">
+                            <Setter Property="Background" Value="{x:Null}"/>
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Text" Value="{x:Null}"/>
+                                <Condition Property="IsFocused" Value="false"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Visibility" TargetName="tipTextBlock" Value="Visible"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Text" Value=""/>
+                                <Condition Property="IsFocused" Value="false"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Visibility" TargetName="tipTextBlock" Value="Visible"/>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <!--<Setter Property="ContextMenu" Value="{StaticResource ThemenTextBoxContextMenu}"/>-->
+    </Style>
+
+
+    <Style x:Key="TitleTextBoxBaseStyle" TargetType="{x:Type TextBox}">
+        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}"/>
+        <Setter Property="Foreground" Value="#FF666666"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="AllowDrop" Value="true"/>
+        <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+        <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+        <Setter Property="FontFamily" Value="Microsoft YaHei"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="assist:BorderElementAssist.CornerRadius" Value="4"/>
+        <Setter Property="assist:TextBlockElementAssist.Foreground" Value="{StaticResource FtspGlobalFontMainColor}"/>
+        <Setter Property="assist:TextBlockElementAssist.Margin" Value="12,0,0,0"/>
+        <Setter Property="assist:BackgroundSwitchElementAssist.MouseHoverBackground" Value="{StaticResource TextBox.MouseOver.Border}"/>
+        <Setter Property="assist:BackgroundSwitchElementAssist.MouseDownBackground" Value="{StaticResource TextBox.Focus.Border}"/>
+        <Setter Property="assist:TextBlockElementAssist.Foreground" Value="Black"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBox}">
+                    <DockPanel LastChildFill="True">
+                        <Border DockPanel.Dock="{Binding  Path=(assist:TitleElementAssist.TitlePlacement), RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                            <Label x:Name="title"  HorizontalAlignment="Left" 
+                                   Margin="{Binding Path=(assist:TitleElementAssist.Margin),RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                   Foreground="{Binding Path=(assist:TitleElementAssist.Foreground),RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                   Content="{Binding Path=(assist:TitleElementAssist.Title),RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                   />
+                        </Border>
+                        <Border x:Name="border" DockPanel.Dock="{Binding  Path=(assist:TitleElementAssist.TitlePlacement), RelativeSource={RelativeSource Mode=TemplatedParent}}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True" CornerRadius="{Binding Path=(assist:BorderElementAssist.CornerRadius), RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                            <Grid>
+                                <ScrollViewer  x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                                <TextBlock x:Name="tipTextBlock"
+                                       Foreground="{Binding Path=(assist:TextBlockElementAssist.Foreground), RelativeSource={RelativeSource Mode=TemplatedParent}}" 
+                                       Margin="{Binding Path= (assist:TextBlockElementAssist.Margin),RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                       Text="{Binding Path=(assist:BorderElementAssist.Text), RelativeSource={RelativeSource Mode=TemplatedParent}}" Visibility="Collapsed" VerticalAlignment="Center" FontFamily="{TemplateBinding FontFamily}" FontSize="{TemplateBinding FontSize}" 
+                                       Style="{StaticResource WateMarkStyle}"/>
+                            </Grid>
+                        </Border>
+                    </DockPanel>
+
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=title,Path=Content}" Value="">
+                            <Setter Property="Visibility" TargetName="title" Value="Collapsed"/>
+                        </DataTrigger>
+
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{Binding Path=(assist:BackgroundSwitchElementAssist.MouseHoverBackground),RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="true">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{Binding Path=(assist:BackgroundSwitchElementAssist.MouseDownBackground),RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                        </Trigger>
+                        <Trigger Property="IsFocused" Value="false">
+                            <Setter Property="Background" Value="{x:Null}"/>
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Text" Value="{x:Null}"/>
+                                <Condition Property="IsFocused" Value="false"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Visibility" TargetName="tipTextBlock" Value="Visible"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Text" Value=""/>
+                                <Condition Property="IsFocused" Value="false"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Visibility" TargetName="tipTextBlock" Value="Visible"/>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ContextMenu" Value="{StaticResource ThemenTextBoxContextMenu}"/>
+    </Style>
+</ResourceDictionary>

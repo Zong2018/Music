@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Menu>
+  <MenuItem ViewClassName ="Music.Views.FindMusicView" IsSpecial ="false" Name="发现音乐"/>
+  <MenuItem ViewClassName ="Music.Views.PodcastView" IsSpecial ="false" Name="播客"/>
+  <MenuItem ViewClassName ="Music.Views.VideoView" IsSpecial ="false" Name="视频">
+  </MenuItem>
+  <MenuItem ViewClassName ="Music.Views.FollowView" IsSpecial ="false" Name="关注">
+  </MenuItem>
+  <MenuItem ViewClassName ="Music.Views.LiveBroadcastView" IsSpecial ="false" Name="直播">
+  </MenuItem>
+  <MenuItem ViewClassName ="Music.Views.PrivateFMView" IsSpecial ="false" Name="私人FM">
+  </MenuItem>
+  <MenuItem ViewClassName ="Music.Views.MyMusicView" IsSpecial ="true" Name="我的音乐">
+  </MenuItem>
+  <MenuItem ViewClassName ="Music.Views.LocalDownLoadView" IsSpecial ="false" Name="本地下载">
+  </MenuItem>
+  <MenuItem ViewClassName ="Music.Views.RecentlyPlayedView" IsSpecial ="false" Name="最近播放">
+  </MenuItem>
+  <MenuItem ViewClassName ="Music.Views.MyMusicCloudView" IsSpecial ="false" Name="我的音乐云盘">
+  </MenuItem>
+  <MenuItem ViewClassName ="Music.Views.MyPodcastView" IsSpecial ="false" Name="我的播客">
+  </MenuItem>
+  <MenuItem ViewClassName ="Music.Views.MyCollectionView" IsSpecial ="false" Name="我的收藏" Operate="None">
+  </MenuItem>
+  <MenuItem ViewClassName ="Music.Views.CreatedSongListView" IsSpecial ="true" Name="创建的歌单" Operate="Add">
+    <MenuItem ViewClassName ="Music.Views.MyFavoriteMusicView" IsSpecial ="false" Name="我喜欢的音乐">
+    </MenuItem>
+  </MenuItem>
+</Menu>

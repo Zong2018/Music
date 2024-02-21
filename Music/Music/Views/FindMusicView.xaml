@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="Music.Views.FindMusicView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Music.Views"
+             xmlns:assist="clr-namespace:Music.ControlAssist"
+             xmlns:convert="clr-namespace:Music.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="540" d:DesignWidth="800">
+    <UserControl.Resources>
+        <convert:NewMusicSheetViewHeightToItemsControlHeightConverter x:Key="NewMusicSheetViewHeightToItemsControlHeightConverter" />
+    </UserControl.Resources>
+    <Grid Background="Transparent">
+        <TabControl BorderThickness="0" Style="{StaticResource TabControlStyle}" Margin="0" ItemContainerStyle="{StaticResource TabItemStyle}" Visibility="{Binding MainContentVisibility}" >
+            <TabItem Header="个性推荐" FontSize="18" assist:ElementAssist.Margin="30,22,6,0">
+                <Grid Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:FindMusicView}},Path=ActualWidth}" Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:FindMusicView}},Path=ActualHeight}">
+                    <Border Padding="30,30,30,30">
+                        <local:RecommendView VerticalAlignment="Top"/>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <TabItem Header="专属定制" FontSize="18">
+                <ScrollViewer Padding="30,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Style="{StaticResource ScrollViewerStyle}" VerticalScrollBarVisibility="Hidden">
+                    <ItemsControl MinWidth="780" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="800" ItemsSource="{Binding CustromSongSheetInfos}"  Style="{StaticResource SongSheetItemsControlStyle}">
+
+                    </ItemsControl>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="歌单" FontSize="18">
+                <ScrollViewer Padding="30,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Style="{StaticResource ScrollViewerStyle}" VerticalScrollBarVisibility="Hidden">
+                    <ItemsControl MinWidth="780" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ItemsSource="{Binding SongSheetInfos}"  Style="{StaticResource NewSongSheetItemsControlStyle}" Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:FindMusicView}},Path=ActualHeight,Converter={StaticResource NewMusicSheetViewHeightToItemsControlHeightConverter}}">
+
+                    </ItemsControl>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="排行榜" FontSize="18">
+                <Grid Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:FindMusicView}},Path=ActualWidth}" Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:FindMusicView}},Path=ActualHeight}">
+                    <Border Padding="30,30,30,30">
+                        <local:RankingListView/>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <TabItem Header="歌手" FontSize="18">
+
+            </TabItem>
+            <TabItem Header="最新音乐" FontSize="18">
+
+            </TabItem>
+        </TabControl>
+        <ContentControl Content="{Binding ContentView}" Visibility="{Binding ContentVisibility}"/> 
+    </Grid>
+</UserControl>

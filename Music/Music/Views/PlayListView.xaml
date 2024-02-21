@@ -1,0 +1,201 @@
+﻿<UserControl x:Class="Music.Views.PlayListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:assist="clr-namespace:Music.ControlAssist"
+             xmlns:local="clr-namespace:Music.Views"
+             xmlns:converter="clr-namespace:Music.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converter:DataGridItemsCountToBoolConverter x:Key="DataGridItemsCountToBoolConverter"/>
+        <converter:DurationToDurationStringConverter x:Key="DurationToDurationStringConverter"/>
+        
+        <Style x:Key="DataGridColumnHeaderLeftStyle" TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource DataGridColumnHeaderBase}">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <ScrollViewer x:Name="scroll" Style="{StaticResource ScrollViewerStyle}" VirtualizingStackPanel.IsVirtualizing="True"  PreviewMouseWheel="ScrollViewer_MouseWheel">
+            <DockPanel>
+                <Grid Height="240" DockPanel.Dock="Top">
+                    <DockPanel>
+                        <Border CornerRadius="4" Width="182" Height="182" BorderThickness="1" BorderBrush="#FFE8E8E8" DockPanel.Dock="Left" Margin="16,0,0,0">
+                            <Border.Background>
+                                <ImageBrush ImageSource="{Binding SongSheetInfo.Pic}"/>
+                            </Border.Background>
+                        </Border>
+                        <StackPanel DockPanel.Dock="Left" Margin="20,30,0,0">
+                            <StackPanel Orientation="Horizontal">
+                                <Border BorderBrush="{DynamicResource MusicDesignTabItemSelectedMark}" CornerRadius="4" BorderThickness="1" Padding="4,0" VerticalAlignment="Top">
+                                    <TextBlock Text="歌单" Foreground="{DynamicResource MusicDesignTabItemSelectedMark}" FontSize="14"/>
+                                </Border>
+                                <TextBlock Margin="16,0,0,0" Text="{Binding SongSheetInfo.Name}" Foreground="{DynamicResource MusicDesignLevel1Foreground}" FontSize="20"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="0,0,0,0" Text="{Binding SongSheetInfo.Uname}" Foreground="#50a5d9" FontSize="14"/>
+                            </StackPanel>
+                            <StackPanel Height="30">
+
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+                                <TextBlock Margin="0,0,0,0" Text="标签 : " Foreground="{DynamicResource MusicDesignLevel3Foreground}" FontSize="14"/>
+                                <TextBlock Margin="0,0,0,0" Text="{Binding SongSheetInfo.Tag}" Foreground="#50a5d9" FontSize="14"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0" TextBlock.Foreground="{DynamicResource MusicDesignLevel3Foreground}">
+                                <TextBlock Margin="0,0,0,0" Text="歌曲 : " FontSize="14"/>
+                                <TextBlock Margin="0,0,0,0" Text="{Binding SongSheetInfo.Total}" FontSize="14"/>
+                                <TextBlock Margin="10,0,0,0" Text="播放 : " FontSize="14"/>
+                                <TextBlock Margin="0,0,0,0" Text="{Binding SongSheetInfo.Listen}" FontSize="14"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0" TextBlock.Foreground="{DynamicResource MusicDesignLevel3Foreground}">
+                                <TextBlock Margin="0,0,0,0" Text="简介 : " FontSize="14"/>
+                                <TextBlock Margin="0,0,0,0" Text="{Binding SongSheetInfo.Info}" FontSize="14" Width="200" TextTrimming="CharacterEllipsis"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </DockPanel>
+                </Grid>
+                <TabControl DockPanel.Dock="Top" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" Style="{StaticResource TabControlStyle}" ItemContainerStyle="{StaticResource TabItemStyle}">
+                    <TabItem Header="歌曲列表">
+                        <DataGrid x:Name="songDataGrid" Background="Transparent" Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type local:PlayListView}}}" ScrollViewer.VerticalScrollBarVisibility="Disabled" ItemsSource="{Binding CurrentOpenedPlayList}" Style="{StaticResource DataGridStyle}"
+                              BorderThickness="0"
+                              VerticalScrollBarVisibility="Hidden"
+                              assist:DataGridAssist.CanScroll="False"
+                              SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical"
+                              assist:DataGridAssist.CanClickScroll="{Binding RelativeSource={RelativeSource Mode=Self},Path=Items.Count,Converter={StaticResource DataGridItemsCountToBoolConverter}}"
+                              assist:DataGridAssist.DoubleClickCommand="{Binding DoubleClickCommand}"
+                              MaxHeight="270"
+                              >
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="操作" Width="60" x:Name="cz">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderLeftStyle}">
+                                            <Setter Property="Width" Value="{Binding ElementName=cz,Path=ActualWidth}"/>
+                                            <Setter Property="Margin" Value="14,0,0,0"/>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.CellStyle>
+                                        <Style TargetType="DataGridCell" BasedOn="{StaticResource DataGridCellBase}">
+                                        </Style>
+                                    </DataGridTemplateColumn.CellStyle>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="Transparent">
+                                                <TextBlock Text=""  HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                            </Grid>
+                                            <DataTemplate.Triggers>
+                                                <!--<DataTrigger Binding="{Binding IsPlaying}" Value="true">
+                                                <Setter Property="TextBlock.Foreground" Value="#ec4141"/>
+                                            </DataTrigger>-->
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="标题" Width="4*" x:Name="bt">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderLeftStyle}">
+                                            <Setter Property="Width" Value="{Binding ElementName=bt,Path=ActualWidth}"/>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="Transparent">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Songname}"  HorizontalAlignment="Left" VerticalAlignment="Center" MaxWidth="230" TextTrimming="CharacterEllipsis" Margin="0,0,10,0"/>
+                                                    <Border x:Name="mvBorder" Visibility="Collapsed" BorderBrush="{DynamicResource MusicDesignTabItemSelectedMark}" CornerRadius="2" Padding="5,0,5,0" BorderThickness="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                        <Grid>
+                                                            <TextBlock Text="MV" FontSize="10" VerticalAlignment="Center" Margin="0,0,5,0" Foreground="{DynamicResource MusicDesignTabItemSelectedMark}"/>
+                                                            <Button Style="{StaticResource FontButtonStyle}" Content="            &#xe87c;" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="6" Background="Transparent" Foreground="{DynamicResource MusicDesignTabItemSelectedMark}" Margin="-10,0,-10,0" 
+                                                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:PlayListView}}, Path=DataContext.MvSheetOpenedCommand}" 
+                                                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},Path=SelectedItem}"
+                                                                />
+                                                        </Grid>
+                                                    </Border>
+                                                </StackPanel>
+                                            </Grid>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding IsPlaying}" Value="true">
+                                                    <Setter Property="TextBlock.Foreground" Value="#ec4141"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Hasmv}" Value="true">
+                                                    <Setter Property="Visibility" TargetName="mvBorder" Value="Visible"/>
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="歌手" Width="2*" x:Name="gs">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderLeftStyle}">
+                                            <Setter Property="Width" Value="{Binding ElementName=gs,Path=ActualWidth}"/>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="Transparent">
+                                                <TextBlock Padding="0,0,10,0" Text="{Binding Singer}"  HorizontalAlignment="Left" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                            </Grid>
+                                            <DataTemplate.Triggers>
+                                                <!--<DataTrigger Binding="{Binding IsPlaying}" Value="true">
+                                                <Setter Property="TextBlock.Foreground" Value="#ec4141"/>
+                                            </DataTrigger>-->
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="专辑" Width="3*" x:Name="zj">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderLeftStyle}">
+                                            <Setter Property="Width" Value="{Binding ElementName=zj,Path=ActualWidth}"/>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="Transparent">
+                                                <TextBlock Text="{Binding Albumname}"  HorizontalAlignment="Left" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,10,0"/>
+                                            </Grid>
+                                            <DataTemplate.Triggers>
+                                                <!--<DataTrigger Binding="{Binding IsPlaying}" Value="true">
+                                                <Setter Property="TextBlock.Foreground" Value="#ec4141"/>
+                                            </DataTrigger>-->
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="时间" Width="*" x:Name="sj">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderLeftStyle}">
+                                            <Setter Property="Width" Value="{Binding ElementName=sj,Path=ActualWidth}"/>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="Transparent">
+                                                <TextBlock Text="{Binding Duration,Converter={StaticResource DurationToDurationStringConverter}}"  HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                            </Grid>
+                                            <DataTemplate.Triggers>
+                                                <!--<DataTrigger Binding="{Binding IsPlaying}" Value="true">
+                                                <Setter Property="TextBlock.Foreground" Value="#ec4141"/>
+                                            </DataTrigger>-->
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+
+                        </DataGrid>
+                    </TabItem>
+                    <TabItem Header="评论">
+
+                    </TabItem>
+                    <TabItem Header="收藏者">
+
+                    </TabItem>
+                </TabControl>
+
+            </DockPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

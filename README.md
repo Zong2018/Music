@@ -1,10 +1,8 @@
-主界面
-![1708516662804](https://github.com/Zong2018/Music/assets/37098709/87abdb62-7011-4060-bc8e-43533ac3a325)
+效果图
+![image](https://github.com/Zong2018/Music/assets/37098709/f815e139-0cc4-48f1-86a1-7069c752ae6a)
 
-![image](https://github.com/Zong2018/Music/assets/37098709/d5fdb589-f8c7-488e-aa38-69c0c7882383)
+![image](https://github.com/Zong2018/Music/assets/37098709/ce01b851-9bce-4bf6-9834-4d0bf5a5d5a0)
 
-歌词
-![image](https://github.com/Zong2018/Music/assets/37098709/208ec5c3-3d47-4557-836d-8ac96eece55d)
+![image](https://github.com/Zong2018/Music/assets/37098709/18aacbb9-70f0-4d43-ac58-66b03f5656bd)
 
-
-
+![image](https://github.com/Zong2018/Music/assets/37098709/1f14df25-a35d-42e4-8a3e-43c97ec04f9d)
